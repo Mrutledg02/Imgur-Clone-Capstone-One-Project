@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Author's Posts{% endblock %}
+
+{% block content %}
+
+    <div class="card text-center header-card">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>{{ author.username }}</h3>
+                </div>
+            </div>
+            
+            <!-- Navigation Links -->
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h3>
+                        <a href="{{ url_for('author_posts', username=author.username) }}">Posts</a>
+                        <span class="mx-3"></span>
+                        <a href="{{ url_for('author_likes', username=author.username) }}">Likes</a>
+                        <span class="mx-3"></span>
+                        <a href="{{ url_for('author_comments', username=author.username) }}">Comments</a>
+                        <span class="mx-3"></span>
+                        <a href="{{ url_for('author_about', username=author.username) }}">About</a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Posts -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="image-card-container" class="container card-columns image-card-container">
+                    {% for post in author_posts %}
+                        <div class="card bg-dark text-white">
+                            <a href="{{ url_for('show_image', post_id=post.id) }}">
+                                <img src="{{ post.img_url }}" class="card-img-top" alt="Error getting image, please try again later.">
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{{ url_for('show_image', post_id=post.id) }}">{{ post.title }}</a>
+                                </h5>
+                                <p class="card-text">{{ post.description }}</p>
+                            </div>
+
+                            <!-- Footer section -->
+                            <div class="card-footer d-flex justify-content-between align-items-center">
+                                <!-- Like and Dislike buttons -->
+                                    <div class="d-flex">
+                                        <!-- Like button -->
+                                        <form id="likeForm" action="{{ url_for('like_post', post_id=post.id) }}" method="post">
+                                            <button type="submit" class="btn btn-outline-primary">
+                                                {% if not already_liked %}
+                                                    <i class="far fa-thumbs-up"></i> <!-- thumbs-up outline icon for not liked -->
+                                                {% else %}
+                                                    <i class="fas fa-thumbs-up"></i> <!-- thumbs-up filled icon for liked -->
+                                                {% endif %}
+                                                <span id="likeCount">{{ post.likes_count }}</span>
+                                            </button>
+                                        </form>
+
+                                        <!-- Dislike button -->
+                                        <form id="dislikeForm" action="{{ url_for('dislike_post', post_id=post.id) }}" method="post">
+                                            <button type="submit" class="btn btn-outline-primary">
+                                                {% if not already_disliked %}
+                                                    <i class="far fa-thumbs-down"></i> <!-- thumbs-down outline icon for not disliked -->
+                                                {% else %}
+                                                    <i class="fas fa-thumbs-down"></i> <!-- thumbs-down filled icon for disliked -->
+                                                {% endif %}
+                                                <span id="dislikeCount">{{ post.dislikes_count }}</span>
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                <!-- Display number of comments -->
+                                    <strong><i class="fas fa-comment"></i> {{ post.comments|length }}</strong>
+
+                                <!-- Display number of views -->
+                                    <strong><i class="fas fa-eye"></i> {{ post.views }}</strong>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Moment.js -->
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+{% endblock %}

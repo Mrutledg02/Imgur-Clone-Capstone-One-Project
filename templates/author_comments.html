@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Author's Comments{% endblock %}
+
+{% block content %}
+
+    <div class="card text-center header-card">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>{{ author.username }}</h3>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h3>
+                        <a href="{{ url_for('author_posts', username=author.username) }}">Posts</a>
+                        <span class="mx-3"></span>
+                        <a href="{{ url_for('author_likes', username=author.username) }}">Likes</a>
+                        <span class="mx-3"></span>
+                        <a href="{{ url_for('author_comments', username=author.username) }}">Comments</a>
+                        <span class="mx-3"></span>
+                        <a href="{{ url_for('author_about', username=author.username) }}">About</a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="profile-container" class="container mt-4">
+        <!-- User Information -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card bg-primary text-white">
+                    <!-- Author's Comments -->
+                    {% if author_comments %}
+                        <ul class="list-group">
+                            {% for comment in author_comments %}
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <!-- Image Container -->
+                                        <div class="col-1">
+                                            <a href="{{ url_for('show_image', post_id=comment.post.id) }}">
+                                                <img src="{{ comment.post.img_url }}" class="img-fluid rounded-square" alt="Post Image">
+                                            </a>
+                                        </div>
+                                        <!-- Comment Content -->
+                                        <div class="col-11">
+                                            <div class="comment-header">
+                                                <span class="username">{{ comment.user.username }}</span> <!-- Display commenter's username -->
+                                                <small class="text-muted">{{ comment.created.strftime('%Y-%m-%d %H:%M:%S') }}</small> <!-- Display comment creation date -->
+                                            </div>
+                                            <div class="comment-text">
+                                                {{ comment.text }} <!-- Display comment text -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No comments found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div> 
+    </div>
+                
+</div>
+{% endblock %}

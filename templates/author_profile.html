@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Author Profile - {{ author.username }}{% endblock %}
+
+{% block content %}
+
+    <div class="card text-center header-card">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>{{ author.username }}</h3>
+                </div>
+            </div>
+        
+        <!-- Navigation Links -->
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h3>
+                    <a href="{{ url_for('author_posts', username=author.username) }}">Posts</a>
+                    <span class="mx-3"></span>
+                    <a href="{{ url_for('author_likes', username=author.username) }}">Likes</a>
+                    <span class="mx-3"></span>
+                    <a href="{{ url_for('author_comments', username=author.username) }}">Comments</a>
+                    <span class="mx-3"></span>
+                    <a href="{{ url_for('author_about', username=author.username) }}">About</a>
+                </h3>
+            </div>
+        </div>
+        
+        <!-- Content Specific to Author Profile -->
+        <div class="row">
+            <!-- Content Here -->
+            <div class="col-md-12">
+                <!-- You can display additional information about the author here -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

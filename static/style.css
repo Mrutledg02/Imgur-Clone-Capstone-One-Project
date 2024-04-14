@@ -1,0 +1,156 @@
+/* General CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    background: #191919;
+}
+
+/* Overwriting Bootstrap Start */
+.bg-dark {
+    background: #282828 !important;
+}
+
+.bg-primary {
+    background: #5c69ff !important;
+}
+
+.btn-primary {
+    background: #5c69ff;
+    border: 1px solid #6b77fa;
+}
+.btn-primary:hover {
+    background: #6b77fa;
+    border: 1px solid #5c69ff;
+}
+
+.btn-outline-primary {
+    color: #5c69ff;
+    border: 1px solid #6b77fa;
+}
+
+.btn-outline-primary:hover {
+    background: #6b77fa;
+    border: 1px solid #5c69ff;
+}
+
+a {
+    color: #5c69ff;
+}
+a:hover {
+    color: #6b77fa;
+}
+
+.card-link {
+    color: #5c69ff;
+}
+.card-link:hover {
+    color: #6b77fa;
+}
+
+.alert-danger {
+    color: #ffffff !important;
+    background-color: #ff5c5c !important;
+    border-color: #ad3e3e !important;
+};
+
+.alert-danger .alert-link {
+    color: #ad3e3e !important;
+}
+
+.form-control {
+    color: #ffffff !important;
+    background-color: #191919 !important;
+    border-color: #101010 !important;
+}
+
+.container-fluid{
+    padding: 0 !important;
+}
+
+/* Overwriting Bootstrap Done */
+
+
+.home-link {
+    position: absolute;
+    color: #5c69ff !important;
+    top: 10px;
+    left: 10px;
+}
+
+.small-container {
+    max-width: 400px;
+    width: 50%;
+    margin: 2rem auto;
+}
+
+.small-container img {
+    padding-top: 2rem;
+    width: 50%;
+}
+
+.image-card-container {
+    margin-top: -15px;
+}
+
+.header-card {
+    border-radius: 0 !important;
+    padding: 2.5rem;
+    color: white;
+    /* Credit Atle Mo, Sébastien Grosjean */
+    /* https://leaverou.github.io/css3patterns/#carbon */
+    background:
+        linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
+        linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
+        linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
+        linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
+        linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
+        linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
+    background-color: #131313;
+    background-size: 20px 20px;
+}
+
+.card-deck {
+    padding: 2rem 2rem 1rem 2rem;
+}
+
+.list-group-item {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.rounded-square {
+    width: 100px;
+    height: 100px;
+}
+
+
+/* Custom CSS */
+.like-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.like-count {
+    margin-right: 10px; /* Adjust spacing between like/dislike buttons and count */
+    padding-left: 5px;
+}
+
+.comment-count {
+    margin-left: auto; /* Push the comment count to the right */
+}
+
+/* Smaller icon size for like/dislike buttons */
+.btn i {
+    font-size: 0.7rem;
+}
+
+.dropdown-item:hover,
+.delete-button:hover {
+    background-color: green;
+    color: white;
+}

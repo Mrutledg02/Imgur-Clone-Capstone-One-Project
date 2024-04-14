@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <!-- Image Container -->
+    <div id="image-container" class="container mt-4">
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="row">
+        <!-- Image Section -->
+        <div class="col-sm-12 col-lg-8 mb-2">
+            <div class="card bg-dark text-white">
+                <img id="post-photo" src="{{ img_url }}" class="card-img-top" alt="Error getting image, please try again later.">
+                <div class="card-body">
+                    <h3 class="card-title">{{ post.title }}</h3>
+                    <p class="card-text">{{ post.description }}</p>
+                </div>
+
+                    <!-- Footer section -->
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <!-- Like and Dislike buttons -->
+                        <div class="d-flex">
+                            <!-- Like button -->
+                            <form id="likeForm" action="{{ url_for('like_post', post_id=post.id) }}" method="post">
+                                <button type="submit" class="btn btn-outline-primary">
+                                    {% if not already_liked %}
+                                        <i class="far fa-thumbs-up"></i>
+                                    {% else %}
+                                        <i class="fas fa-thumbs-up"></i>
+                                    {% endif %}
+                                    <span id="likeCount">{{ post.likes_count }}</span>
+                                </button>
+                            </form>
+
+                            <!-- Dislike button -->
+                            <form id="dislikeForm" action="{{ url_for('dislike_post', post_id=post.id) }}" method="post">
+                                <button type="submit" class="btn btn-outline-primary">
+                                    {% if not already_disliked %}
+                                        <i class="far fa-thumbs-down"></i>
+                                    {% else %}
+                                        <i class="fas fa-thumbs-down"></i>
+                                    {% endif %}
+                                    <span id="dislikeCount">{{ post.dislikes_count }}</span>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Display number of comments -->
+                            <strong><i class="fas fa-comment"></i> {{ post.comments|length }}</strong>
+
+                        <!-- Display number of views -->
+                            <strong><i class="fas fa-eye"></i> {{ post.views }}</strong>
+                    </div>
+                    
+                    <!-- Form to add a new comment -->
+                    <div class="card-body">
+                        <form id="commentForm" action="{{ url_for('add_comment_to_specific_post', post_id=post.id) }}" method="post">
+                            <div class="form-group">
+                                <textarea name="text" rows="3" class="form-control" placeholder="Add your comment" maxlength="750"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary float-right">Submit</button>
+                        </form>
+                    </div>
+                                        
+                    <!-- Display comments -->
+                    <ul class="list-group list-group-flush bg-dark">
+                        {% for comment in comments %}
+                        <li class="list-group-item bg-dark text-white">
+                            <div class="comment-header">
+                                <a href="{{ url_for('author_profile', username=comment.user.username) }}" class="username">{{ comment.user.username }}</a> <!-- Make username clickable -->
+                                <small class="text-muted">{{ comment.created }}</small> <!-- Display comment creation date -->
+                            </div>
+                            <div class="comment-text">
+                                {{ comment.text }} <!-- Display comment text -->
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+        <!-- Author Information  -->
+        <div class="col-sm-12 col-lg-4">
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <h5 class="card-text text-muted">Post Information</h5>
+                    <p class="card-text">
+                        Uploaded by <strong><a href="{{ url_for('author_profile', username=post.user.username) }}">{{ post.user.username }}</a></strong>
+                        <br/>
+                        Published {{ post.created }}
+                    </p>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="post-url" aria-describedby="post-url" value="{{ url_for('show_image', post_id=post.id) }}" readonly>
+                        <small id="post-url-help" class="form-text text-muted">Click the link to copy it to your clipboard.</small>
+                    </div>
+
+                    <!-- Add dropdown menu for edit and delete options -->
+                        {% if g.user and g.user.id == post.user.id %}
+                            <div class="float-right d-flex justify-content-between align-items-center">
+                                <div class="dropdown"></div>
+                                    <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton">
+                                        <!-- Add delete and edit button only if the current user is the author of the post -->
+                                        
+                                        <a class="dropdown-item text-white" href="{{ url_for('edit_post', post_id=post.id) }}">Edit Post</a>
+                                        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="post">
+                                            <button type="submit" class="dropdown-item text-white delete-button">Delete Post</button>
+                                        </form>    
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Comments Container -->
+    <div id="comments-container" class="container mt-2 mb-5">
+        <!-- Comments section will be populated dynamically using JavaScript -->
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- Bootstrap Scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Moment.js -->
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+
+{% endblock %}

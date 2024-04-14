@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}{{ user.username }}'s Posts{% endblock %}
+
+{% block content %}
+    <div id="profile-container" class="container mt-4">
+        <!-- User Information -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card bg-primary text-white">
+                    <div class="header-card">
+
+                        <div class="d-flex w-100 justify-content-between">
+                            <h4 id="profile-username" class="card-title">{{ user.username }}</h4>
+                            <p>
+                                Registered
+                                <strong><span id="profile-register-date" class="text-white">{{ user.register_date }}</span></strong>
+                            </p>
+                        </div>
+
+                        <ul class="list-inline float-right">
+                            <li class="list-inline-item">
+                                <i class="fas fa-upload"></i>
+                                <strong><span id="post-uploads">{{ user.uploads }}</span></strong> uploads
+                            </li>
+                            <li class="list-inline-item">
+                                <i class="fas fa-eye"></i>
+                                <strong><span id="post-views">{{ total_views }}</span></strong> views
+                            </li>
+                        </ul>
+
+                        <div class="col-md-12 text-center text-white">
+                            <h3>
+                                <a href="{{ url_for('user_posts', username=user.username) }}">Posts</a>
+                                <span class="mx-3"></span>
+                                <a href="{{ url_for('user_likes', username=user.username) }}">Likes</a>
+                                <span class="mx-3"></span>
+                                <a href="{{ url_for('user_comments', username=user.username) }}">Comments</a>
+                                <span class="mx-3"></span>
+                                <a href="{{ url_for('user_about', username=user.username) }}">About</a>
+                            </h3>
+                        </div>
+
+                        <!-- Edit and Delete User Button -->
+                        <div class="float-right d-flex justify-content-between align-items-center">
+                            <div class="dropdown">
+                                <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="profileDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <div class="dropdown-menu bg-dark" aria-labelledby="profileDropdownButton">
+                                    <a class="dropdown-item text-white" href="{{ url_for('edit_profile') }}">Edit Profile</a>
+                                    <form id="delete-user-form" action="{{ url_for('delete_user') }}" method="POST">
+                                        <button type="submit" class="dropdown-item text-white delete-button">Delete Profile</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Comments -->
+        <div class="row mt-4">
+            {% if user_comments %}
+                <!-- Iterate through user comments if they exist -->
+                {% for comment in user_comments %}
+                    <div class="col-sm-12 mb-4">
+                        <div class="card bg-dark text-white">
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Image Container -->
+                                    <div class="col-1">
+                                        <a href="{{ url_for('show_image', post_id=comment.post.id) }}">
+                                            <img src="{{ comment.post.img_url }}" class="img-fluid rounded-square" alt="Post Image">
+                                        </a>
+                                    </div>
+                                    <!-- Comment Content -->
+                                    <div class="col-9">
+                                        <div class="comment-header">
+                                            <a href="{{ url_for('author_profile', username=comment.user.username) }}" class="username">{{ comment.user.username }}</a>
+                                            <small class="text-muted">{{ comment.created }}</small>
+                                        </div>
+                                        <div class="comment-text">
+                                            {{ comment.text }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- Display message if user hasn't made any comments -->
+                <div class="col-sm-12 mb-4">
+                    <p>No comments yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Moment.js -->
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+{% endblock %}

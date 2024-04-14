@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <!-- Home Glyph -->
+    <a class="home-link" href="/">
+        <i class="fas fa-home"></i>
+    </a>
+
+    <!-- Flashed Error Message Container -->
+    <div id="flashed-error-container" class="small-container" {% if get_flashed_messages(category_filter=["error"]) %} style="display: block;" {% else %} hidden {% endif %}>
+        <div id="comment-no-user-alert">
+            <div id="flashed-error-message" class="alert alert-danger" role="alert">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Logo -->
+    <div class="small-container">
+        <img 
+            src="{{ url_for('static', filename='images/logo_dark.png') }}" 
+            class="img-fluid"
+            alt="Logo Image"
+        >
+    </div>
+
+    <!-- Error Alert -->
+    <div id="error-container" class="small-container" {% if error_message %} {% else %} hidden {% endif %}>
+        <div id="comment-no-user-alert">
+            <div id="error-message" class="alert alert-danger " role="alert">
+                {% if error_message %}
+                    {{ error_message }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Login Form -->
+    <div class="small-container">
+        <div class="card bg-dark text-white">
+            <div class="card-body">
+                <form id="login-form" action="/login" method="post">
+                    {{ form.hidden_tag() }}  <!-- Include CSRF token -->
+                    <div class="form-group">
+                        {{ form.username.label }}
+                        {{ form.username(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.password.label }}
+                        {{ form.password(class="form-control") }}
+                    </div>
+                    <div class="float-right">
+                        <a href="{{ url_for('register') }}" class="card-link">Have no account?</a>
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- Bootstrap Scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Authentication Functions -->
+    <script src="{{ url_for('static', filename='/javascripts/auth.js') }}"></script>
+    <!-- Storing the referer in an input so that the API can access it -->
+    <script src="{{ url_for('static', filename='/javascripts/referer.js') }}"></script>
+
+    <script>
+        let _authForm = document.getElementById('login-form');
+        _authForm.onsubmit = function(event) {
+            event.preventDefault();
+            login();
+        }
+    </script>
+{% endblock %}

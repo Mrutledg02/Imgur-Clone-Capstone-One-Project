@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+
+{% block content %}
+    <!-- Query Container -->
+    <div class="container-fluid">
+        <div class="card text-center header-card">
+            <div class="card-body">
+                <p class="card-text">Showing results for "{{ query }}"</p>
+                <h4 class="card-text header-title">
+                    <strong id="search-query"></strong>
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Images Found Alert -->
+    <div id="query-alert" class="container mt-4" {% if not query or posts %} hidden {% endif %}>
+        <div class="alert alert-danger " role="alert">
+            Could not find any images for '<strong id="query-alert-text">{{ query }}</strong>'.
+        </div>
+    </div>
+
+    <!-- Images Container -->
+    <div id="image-card-container" class="container card-columns image-card-container" {% if not posts %} hidden {% endif %}>
+        {% if posts %}
+            {% for post in posts %}
+                <div class="card bg-dark text-white">
+
+                    <a href="{{ url_for('show_image', post_id=post.id) }}">
+                        <img src="{{ post.img_url }}" class="card-img-top" alt="Error getting image, please try again later.">
+                    </a>
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ url_for('show_image', post_id=post.id) }}">{{ post.title }}</a>
+                        </h5>
+                        <p class="card-text">{{ post.description }}</p> <!-- Description not wrapped in anchor tag -->
+                    </div>
+
+                    <!-- Footer section -->
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <!-- Like and Dislike buttons -->
+                            <div class="d-flex">
+                                <!-- Like button -->
+                                <form id="likeForm" action="{{ url_for('like_post', post_id=post.id) }}" method="post">
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        {% if not already_liked %}
+                                            <i class="far fa-thumbs-up"></i> <!-- thumbs-up outline icon for not liked -->
+                                        {% else %}
+                                            <i class="fas fa-thumbs-up"></i> <!-- thumbs-up filled icon for liked -->
+                                        {% endif %}
+                                        <span id="likeCount">{{ post.likes_count }}</span>
+                                    </button>
+                                </form>
+
+                                <!-- Dislike button -->
+                                <form id="dislikeForm" action="{{ url_for('dislike_post', post_id=post.id) }}" method="post">
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        {% if not already_disliked %}
+                                            <i class="far fa-thumbs-down"></i> <!-- thumbs-down outline icon for not disliked -->
+                                        {% else %}
+                                            <i class="fas fa-thumbs-down"></i> <!-- thumbs-down filled icon for disliked -->
+                                        {% endif %}
+                                        <span id="dislikeCount">{{ post.dislikes_count }}</span>
+                                    </button>
+                                </form>
+                            </div>
+
+                        <!-- Display number of comments -->
+                            <strong><i class="fas fa-comment"></i> {{ post.comments|length }}</strong>
+
+                        <!-- Display number of views -->
+                            <strong><i class="fas fa-eye"></i> {{ post.views }}</strong>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

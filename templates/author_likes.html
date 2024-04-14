@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Author's Posts{% endblock %}
+
+{% block content %}
+
+    <div class="card text-center header-card">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>{{ author.username }}</h3>
+                </div>
+            </div>
+            
+            <!-- Navigation Links -->
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h3>
+                        <a href="{{ url_for('author_posts', username=author.username) }}">Posts</a>
+                        <span class="mx-3"></span>
+                        <a href="{{ url_for('author_likes', username=author.username) }}">Likes</a>
+                        <span class="mx-3"></span>
+                        <a href="{{ url_for('author_comments', username=author.username) }}">Comments</a>
+                        <span class="mx-3"></span>
+                        <a href="{{ url_for('author_about', username=author.username) }}">About</a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- Liked Posts -->
+     <div class="container mt-4">
+        <h2 class="mb-3 text-white">Liked Posts</h2>
+        <div class="row">
+            {% if liked_posts %}
+                {% for post in liked_posts %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card bg-dark text-white">
+                            <!-- Make the image clickable -->
+                            <a href="{{ url_for('show_image', post_id=post.id) }}">
+                                <img src="{{ post.img_url }}" class="card-img-top" alt="Post Image">
+                            </a>
+                            <div class="card-body">
+                                <!-- Make the title clickable -->
+                                <h5 class="card-title">
+                                    <a href="{{ url_for('show_image', post_id=post.id) }}" class="text-white">{{ post.title }}</a>
+                                </h5>
+                                <p class="card-text">{{ post.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-md-12 text-center text-white">
+                    <p>No liked posts found.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

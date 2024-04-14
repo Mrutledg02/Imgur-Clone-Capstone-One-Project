@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <!-- Quote Section -->
+    <div id="quote-container" class="container-fluid">
+        <div class="card text-center header-card">
+            <div class="card-body">
+                <blockquote class="blockquote text-center">
+                    <p id="quote-text" class="mb-0">{{ random_quote['quote'] }}</p>
+                    <footer class="blockquote-footer" id="quote-author">{{ random_quote['author'] }}</footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+
+    <!-- Post Container -->
+    <div id="image-card-container" class="container card-columns image-card-container">
+        {% for post in posts %}
+        <div class="card bg-dark text-white">
+
+            <a href="{{ url_for('show_image', post_id=post.id) }}">
+                <img src="{{ post.img_url }}" class="card-img-top" alt="Error getting image, please try again later.">
+            </a>
+
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{{ url_for('show_image', post_id=post.id) }}">{{ post.title }}</a>
+                </h5>
+            </div>
+            
+            <!-- Footer section -->
+            <div class="card-footer d-flex justify-content-between align-items-center">
+                <!-- Like and Dislike buttons -->
+                <div class="d-flex">
+                    <!-- Like button -->
+                    <form id="likeForm" action="{{ url_for('like_post', post_id=post.id) }}" method="post">
+                        <button type="submit" class="btn btn-outline-primary">
+                            {% if not already_liked %}
+                                <i class="far fa-thumbs-up"></i>
+                            {% else %}
+                                <i class="fas fa-thumbs-up"></i>
+                            {% endif %}
+                            <span id="likeCount">{{ post.likes_count }}</span>
+                        </button>
+                    </form>
+
+                    <!-- Dislike button -->
+                    <form id="dislikeForm" action="{{ url_for('dislike_post', post_id=post.id) }}" method="post">
+                        <button type="submit" class="btn btn-outline-primary">
+                            {% if not already_disliked %}
+                                <i class="far fa-thumbs-down"></i>
+                            {% else %}
+                                <i class="fas fa-thumbs-down"></i>
+                            {% endif %}
+                            <span id="dislikeCount">{{ post.dislikes_count }}</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Display number of comments -->
+                    <strong><i class="fas fa-comment"></i> {{ post.comments|length }}</strong>
+
+                <!-- Display number of views -->
+                    <strong><i class="fas fa-eye"></i> {{ post.views }}</strong>
+            </div>
+
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+<!-- Bootstrap/JQuery Scripts -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!-- Axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- Moment.js -->
+<script src="https://momentjs.com/downloads/moment.js"></script>
+
+</html>

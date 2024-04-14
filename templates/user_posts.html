@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}{{ user.username }}'s Posts{% endblock %}
+
+{% block content %}
+    <div id="profile-container" class="container mt-4">
+        <!-- User Information -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card bg-primary text-white">
+                    <div class="header-card">
+
+                        <div class="d-flex w-100 justify-content-between">
+                            <h4 id="profile-username" class="card-title">{{ user.username }}</h4>
+                            <p>
+                                Registered
+                                <strong><span id="profile-register-date" class="text-white">{{ user.register_date }}</span></strong>
+                            </p>
+                        </div>
+
+                        <ul class="list-inline float-right">
+                            <li class="list-inline-item">
+                                <i class="fas fa-upload"></i>
+                                <strong><span id="post-uploads">{{ user.uploads }}</span></strong> uploads
+                            </li>
+                            <li class="list-inline-item">
+                                <i class="fas fa-eye"></i>
+                                <strong><span id="post-views">{{ total_views }}</span></strong> views
+                            </li>
+                        </ul>
+
+                        <div class="col-md-12 text-center text-white">
+                            <h3>
+                                <a href="{{ url_for('user_posts', username=user.username) }}">Posts</a>
+                                <span class="mx-3"></span>
+                                <a href="{{ url_for('user_likes', username=user.username) }}">Likes</a>
+                                <span class="mx-3"></span>
+                                <a href="{{ url_for('user_comments', username=user.username) }}">Comments</a>
+                                <span class="mx-3"></span>
+                                <a href="{{ url_for('user_about', username=user.username) }}">About</a>
+                            </h3>
+                        </div>
+
+                        <!-- Edit and Delete User Button -->
+                        <div class="float-right d-flex justify-content-between align-items-center">
+                            <div class="dropdown">
+                                <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="profileDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <div class="dropdown-menu bg-dark" aria-labelledby="profileDropdownButton">
+                                    <a class="dropdown-item text-white" href="{{ url_for('edit_profile') }}">Edit Profile</a>
+                                    <form id="delete-user-form" action="{{ url_for('delete_user') }}" method="POST">
+                                        <button type="submit" class="dropdown-item text-white delete-button">Delete Profile</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Posts -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="image-card-container" class="container card-columns image-card-container">
+                    {% for post in user_posts %}
+                    <div class="card bg-dark text-white">
+                        <a href="{{ url_for('show_image', post_id=post.id) }}">
+                            <img src="{{ post.img_url }}" class="card-img-top" alt="Error getting image, please try again later.">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ url_for('show_image', post_id=post.id) }}">{{ post.title }}</a>
+                            </h5>
+                            <p class="card-text">{{ post.description }}</p>
+                        </div>
+
+                            <!-- Footer section -->
+                            <div class="card-footer d-flex justify-content-between align-items-center">
+                                <!-- Like and Dislike buttons -->
+                                <div class="d-flex">
+                                    <!-- Like button -->
+                                    <form id="likeForm" action="{{ url_for('like_post', post_id=post.id) }}" method="post">
+                                        <button type="submit" class="btn btn-outline-primary">
+                                            {% if not already_liked %}
+                                                <i class="far fa-thumbs-up"></i>
+                                            {% else %}
+                                                <i class="fas fa-thumbs-up"></i>
+                                            {% endif %}
+                                            <span id="likeCount">{{ post.likes_count }}</span>
+                                        </button>
+                                    </form>
+
+                                    <!-- Dislike button -->
+                                    <form id="dislikeForm" action="{{ url_for('dislike_post', post_id=post.id) }}" method="post">
+                                        <button type="submit" class="btn btn-outline-primary">
+                                            {% if not already_disliked %}
+                                                <i class="far fa-thumbs-down"></i>
+                                            {% else %}
+                                                <i class="fas fa-thumbs-down"></i>
+                                            {% endif %}
+                                            <span id="dislikeCount">{{ post.dislikes_count }}</span>
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Display number of comments -->
+                                    <strong><i class="fas fa-comment"></i> {{ post.comments|length }}</strong>
+
+                                <!-- Display number of views -->
+                                    <strong><i class="fas fa-eye"></i> {{ post.views }}</strong> 
+                            </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
