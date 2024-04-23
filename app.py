@@ -45,16 +45,16 @@ def add_user_to_g():
 
 def do_login(user):
     """Log in user."""
-
-    session[CURR_USER_KEY] = user.id
-    session.permanent = True  # Setting the session to be permanent
+    with app.app_context():
+        session[CURR_USER_KEY] = user.id
+        session.permanent = True  # Setting the session to be permanent
 
 
 def do_logout():
     """Logout user."""
-
-    if CURR_USER_KEY in session:
-        del session[CURR_USER_KEY]
+    with app.app_context():
+        if CURR_USER_KEY in session:
+            del session[CURR_USER_KEY]
 
 
 ############################################################################################################
