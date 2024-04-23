@@ -14,9 +14,9 @@ CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
 
-app.app_context().push()
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///imgur_clone_db'
+
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", 'postgresql:///imgur_clone_db')
 connect_db(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
@@ -36,8 +36,10 @@ bcrypt = Bcrypt(app)
 def add_user_to_g():
     """If we're logged in, add current user to Flask global."""
 
+    # Checking if a user is logged in
     if CURR_USER_KEY in session:
-        g.user = User.query.get(session[CURR_USER_KEY])
+        with app.app_context():
+            g.user = User.query.get(session[CURR_USER_KEY])
 
     else:
         g.user = None
@@ -534,10 +536,11 @@ def upload_image():
 # Function to increment the user's upload count
 def increment_user_uploads(user_id):
     """Increment the user's upload count."""
-    user = User.query.get(user_id)
-    if user:
-        user.uploads += 1
-        db.session.commit()
+    with app.app_context():
+        user = User.query.get(user_id)
+        if user:
+            user.uploads += 1
+            db.session.commit()   
 
 # Route to serve uploaded images
 @app.route('/uploads/<filename>')
@@ -593,10 +596,11 @@ def show_image(post_id):
 # Route to handle deleting a post, and decrementing the user's upload count
 def decrement_user_uploads(user_id):
     """Decrement the user's upload count."""
-    user = User.query.get(user_id)
-    if user and user.uploads > 0:
-        user.uploads -= 1
-        db.session.commit()
+    with app.app_context():
+        user = User.query.get(user_id)
+        if user and user.uploads > 0:
+            user.uploads -= 1
+            db.session.commit()  
 
 # Route to delete a post
 @app.route('/post/<int:post_id>/delete', methods=['POST'])
