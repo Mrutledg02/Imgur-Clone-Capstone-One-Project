@@ -7,10 +7,8 @@ bcrypt = Bcrypt()
 db = SQLAlchemy()
 
 def connect_db(app):
-    with app.app_context():
-        db.app = app
-        db.init_app(app)
-        db.create_all()
+    db.app = app
+    db.init_app(app)
 
 class User(db.Model):
 
