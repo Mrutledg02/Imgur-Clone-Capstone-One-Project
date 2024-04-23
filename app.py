@@ -14,6 +14,8 @@ CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
 
+app.app_context().push()
+
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", 'postgresql:///imgur_clone_db')
 connect_db(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -34,10 +36,8 @@ bcrypt = Bcrypt(app)
 def add_user_to_g():
     """If we're logged in, add current user to Flask global."""
 
-    # Checking if a user is logged in
     if CURR_USER_KEY in session:
-        with app.app_context():
-            g.user = User.query.get(session[CURR_USER_KEY])
+        g.user = User.query.get(session[CURR_USER_KEY])
 
     else:
         g.user = None
@@ -45,27 +45,24 @@ def add_user_to_g():
 
 def do_login(user):
     """Log in user."""
-    with app.app_context():
-        session[CURR_USER_KEY] = user.id
-        session.permanent = True 
-        g.user = user # Assigning the user to g.user
+
+    session[CURR_USER_KEY] = user.id
 
 
 def do_logout():
     """Logout user."""
-    with app.app_context():
-        if CURR_USER_KEY in session:
-            del session[CURR_USER_KEY]
+
+    if CURR_USER_KEY in session:
+        del session[CURR_USER_KEY]
 
 
 ############################################################################################################
 # Login a user
 
-# Login a user
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # Check if user is already logged in
-    if CURR_USER_KEY in session:
+    if 'user_id' in session:
         return redirect(url_for('index'))
     
     form = LoginForm(request.form)
@@ -537,11 +534,10 @@ def upload_image():
 # Function to increment the user's upload count
 def increment_user_uploads(user_id):
     """Increment the user's upload count."""
-    with app.app_context():
-        user = User.query.get(user_id)
-        if user:
-            user.uploads += 1
-            db.session.commit()   
+    user = User.query.get(user_id)
+    if user:
+        user.uploads += 1
+        db.session.commit()
 
 # Route to serve uploaded images
 @app.route('/uploads/<filename>')
@@ -597,11 +593,10 @@ def show_image(post_id):
 # Route to handle deleting a post, and decrementing the user's upload count
 def decrement_user_uploads(user_id):
     """Decrement the user's upload count."""
-    with app.app_context():
-        user = User.query.get(user_id)
-        if user and user.uploads > 0:
-            user.uploads -= 1
-            db.session.commit()  
+    user = User.query.get(user_id)
+    if user and user.uploads > 0:
+        user.uploads -= 1
+        db.session.commit()
 
 # Route to delete a post
 @app.route('/post/<int:post_id>/delete', methods=['POST'])
