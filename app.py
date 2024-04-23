@@ -47,6 +47,7 @@ def do_login(user):
     """Log in user."""
 
     session[CURR_USER_KEY] = user.id
+    session.permanent = True  # Setting the session to be permanent
 
 
 def do_logout():
@@ -59,10 +60,11 @@ def do_logout():
 ############################################################################################################
 # Login a user
 
+# Login a user
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # Check if user is already logged in
-    if 'user_id' in session:
+    if CURR_USER_KEY in session:
         return redirect(url_for('index'))
     
     form = LoginForm(request.form)
