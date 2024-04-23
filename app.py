@@ -47,7 +47,8 @@ def do_login(user):
     """Log in user."""
     with app.app_context():
         session[CURR_USER_KEY] = user.id
-        session.permanent = True  # Setting the session to be permanent
+        session.permanent = True 
+        g.user = user # Assigning the user to g.user
 
 
 def do_logout():
