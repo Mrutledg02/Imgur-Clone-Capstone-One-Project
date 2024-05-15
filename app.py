@@ -6,7 +6,6 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from models import db, connect_db, User, Comment, Post, Like, View
 from forms import LoginForm, RegistrationForm, PostImageForm, EditProfileForm, EditPostForm
-from config import API_KEY
 import requests
 import os
 
@@ -96,7 +95,7 @@ def get_random_quote():
     """Fetch a random quote from an external API."""
     try:
         api_url = 'https://api.api-ninjas.com/v1/quotes'
-        headers = {'X-Api-Key': API_KEY}
+        headers = {'X-Api-Key': os.environ.get('API_KEY')}
         response = requests.get(api_url, headers=headers)
         
         if response.status_code == 200:
