@@ -16,13 +16,13 @@
         <div class="row">
             <div class="col-md-12 text-center">
                 <h3>
-                    <a href="{{ url_for('author_posts', username=author.username) }}">Posts</a>
+                    <a href="{{ url_for('author_profile.author_posts', username=author.username) }}">Posts</a>
                     <span class="mx-3"></span>
-                    <a href="{{ url_for('author_likes', username=author.username) }}">Likes</a>
+                    <a href="{{ url_for('author_profile.author_likes', username=author.username) }}">Likes</a>
                     <span class="mx-3"></span>
-                    <a href="{{ url_for('author_comments', username=author.username) }}">Comments</a>
+                    <a href="{{ url_for('author_profile.author_comments', username=author.username) }}">Comments</a>
                     <span class="mx-3"></span>
-                    <a href="{{ url_for('author_about', username=author.username) }}">About</a>
+                    <a href="{{ url_for('author_profile.author_about', username=author.username) }}">About</a>
                 </h3>
             </div>
         </div>

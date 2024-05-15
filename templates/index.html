@@ -30,13 +30,13 @@
         {% for post in posts %}
         <div class="card bg-dark text-white">
 
-            <a href="{{ url_for('show_image', post_id=post.id) }}">
+            <a href="{{ url_for('post.show_image', post_id=post.id) }}">
                 <img src="{{ post.img_url }}" class="card-img-top" alt="Error getting image, please try again later.">
             </a>
 
             <div class="card-body">
                 <h5 class="card-title">
-                    <a href="{{ url_for('show_image', post_id=post.id) }}">{{ post.title }}</a>
+                    <a href="{{ url_for('post.show_image', post_id=post.id) }}">{{ post.title }}</a>
                 </h5>
             </div>
             
@@ -46,7 +46,7 @@
                 <div class="d-flex">
                     {% if g.user %}
                         <!-- Like button -->
-                        <form id="likeForm" action="{{ url_for('like_post', post_id=post.id) }}" method="post">
+                        <form id="likeForm" action="{{ url_for('like.like_post', post_id=post.id) }}" method="post">
                             <button type="submit" class="btn btn-outline-primary">
                                 {% if not already_liked %}
                                     <i class="far fa-thumbs-up"></i>
@@ -58,7 +58,7 @@
                         </form>
 
                         <!-- Dislike button -->
-                        <form id="dislikeForm" action="{{ url_for('dislike_post', post_id=post.id) }}" method="post">
+                        <form id="dislikeForm" action="{{ url_for('dislike.dislike_post', post_id=post.id) }}" method="post">
                             <button type="submit" class="btn btn-outline-primary">
                                 {% if not already_disliked %}
                                     <i class="far fa-thumbs-down"></i>
@@ -75,7 +75,7 @@
                 <strong><i class="fas fa-comment"></i> {{ post.comments|length }}</strong>
 
                 <!-- Display number of views -->
-                <strong><i class="fas fa-eye"></i> {{ post.views }}</strong>
+                <strong><i class="fas fa-eye"></i> {{ post.total_views() }}</strong>
             </div>
 
         </div>

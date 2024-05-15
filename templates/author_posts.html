@@ -16,13 +16,13 @@
             <div class="row">
                 <div class="col-md-12 text-center">
                     <h3>
-                        <a href="{{ url_for('author_posts', username=author.username) }}">Posts</a>
+                        <a href="{{ url_for('author_profile.author_posts', username=author.username) }}">Posts</a>
                         <span class="mx-3"></span>
-                        <a href="{{ url_for('author_likes', username=author.username) }}">Likes</a>
+                        <a href="{{ url_for('author_profile.author_likes', username=author.username) }}">Likes</a>
                         <span class="mx-3"></span>
-                        <a href="{{ url_for('author_comments', username=author.username) }}">Comments</a>
+                        <a href="{{ url_for('author_profile.author_comments', username=author.username) }}">Comments</a>
                         <span class="mx-3"></span>
-                        <a href="{{ url_for('author_about', username=author.username) }}">About</a>
+                        <a href="{{ url_for('author_profile.author_about', username=author.username) }}">About</a>
                     </h3>
                 </div>
             </div>
@@ -36,12 +36,12 @@
                 <div id="image-card-container" class="container card-columns image-card-container">
                     {% for post in author_posts %}
                         <div class="card bg-dark text-white">
-                            <a href="{{ url_for('show_image', post_id=post.id) }}">
+                            <a href="{{ url_for('post.show_image', post_id=post.id) }}">
                                 <img src="{{ post.img_url }}" class="card-img-top" alt="Error getting image, please try again later.">
                             </a>
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <a href="{{ url_for('show_image', post_id=post.id) }}">{{ post.title }}</a>
+                                    <a href="{{ url_for('post.show_image', post_id=post.id) }}">{{ post.title }}</a>
                                 </h5>
                                 <p class="card-text">{{ post.description }}</p>
                             </div>
@@ -51,7 +51,7 @@
                                 <!-- Like and Dislike buttons -->
                                     <div class="d-flex">
                                         <!-- Like button -->
-                                        <form id="likeForm" action="{{ url_for('like_post', post_id=post.id) }}" method="post">
+                                        <form id="likeForm" action="{{ url_for('like.like_post', post_id=post.id) }}" method="post">
                                             <button type="submit" class="btn btn-outline-primary">
                                                 {% if not already_liked %}
                                                     <i class="far fa-thumbs-up"></i> <!-- thumbs-up outline icon for not liked -->
@@ -63,7 +63,7 @@
                                         </form>
 
                                         <!-- Dislike button -->
-                                        <form id="dislikeForm" action="{{ url_for('dislike_post', post_id=post.id) }}" method="post">
+                                        <form id="dislikeForm" action="{{ url_for('dislike.dislike_post', post_id=post.id) }}" method="post">
                                             <button type="submit" class="btn btn-outline-primary">
                                                 {% if not already_disliked %}
                                                     <i class="far fa-thumbs-down"></i> <!-- thumbs-down outline icon for not disliked -->
@@ -79,7 +79,7 @@
                                     <strong><i class="fas fa-comment"></i> {{ post.comments|length }}</strong>
 
                                 <!-- Display number of views -->
-                                    <strong><i class="fas fa-eye"></i> {{ post.views }}</strong>
+                                    <strong><i class="fas fa-eye"></i> {{ post.total_views() }}</strong>
                             </div>
                         </div>
                     {% endfor %}

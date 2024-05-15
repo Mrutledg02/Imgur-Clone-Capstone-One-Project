@@ -5,7 +5,6 @@ from wtforms.validators import DataRequired, Email, EqualTo, Optional, Length, V
 
 class UniqueEmail(Email):
     def __init__(self, message=None):
-
         if not message:
             message = 'Email address is already registered.'
         super(UniqueEmail, self).__init__(message)
@@ -30,8 +29,8 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(),  UniqueEmail()])
+    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=20), UniqueUsername()])
+    email = StringField('Email', validators=[DataRequired(), Email(), UniqueEmail()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6, message='Password must be at least 6 characters long')])
     password_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')

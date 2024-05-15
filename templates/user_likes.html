@@ -30,13 +30,13 @@
 
                         <div class="col-md-12 text-center text-white">
                             <h3>
-                                <a href="{{ url_for('user_posts', username=user.username) }}">Posts</a>
+                                <a href="{{ url_for('profile.user_posts', username=username) }}">Posts</a>
                                 <span class="mx-3"></span>
-                                <a href="{{ url_for('user_likes', username=user.username) }}">Likes</a>
+                                <a href="{{ url_for('profile.user_likes', username=username) }}">Likes</a>
                                 <span class="mx-3"></span>
-                                <a href="{{ url_for('user_comments', username=user.username) }}">Comments</a>
+                                <a href="{{ url_for('profile.user_comments', username=username) }}">Comments</a>
                                 <span class="mx-3"></span>
-                                <a href="{{ url_for('user_about', username=user.username) }}">About</a>
+                                <a href="{{ url_for('profile.user_about', username=username) }}">About</a>
                             </h3>
                         </div>
 
@@ -44,11 +44,11 @@
                         <div class="float-right d-flex justify-content-between align-items-center">
                             <div class="dropdown">
                                 <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="profileDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Actions
+                                    <i class="fa-solid fa-ellipsis"></i>
                                 </button>
                                 <div class="dropdown-menu bg-dark" aria-labelledby="profileDropdownButton">
-                                    <a class="dropdown-item text-white" href="{{ url_for('edit_profile') }}">Edit Profile</a>
-                                    <form id="delete-user-form" action="{{ url_for('delete_user') }}" method="POST">
+                                    <a class="dropdown-item text-white" href="{{ url_for('profile.edit_profile') }}">Edit Profile</a>
+                                    <form id="delete-user-form" action="{{ url_for('profile.delete_user') }}" method="POST">
                                         <button type="submit" class="dropdown-item text-white delete-button">Delete Profile</button>
                                     </form>
                                 </div>
@@ -70,13 +70,13 @@
                         <div class="col-md-4 mb-4">
                             <div class="card bg-dark text-white">
                                 <!-- Make the image clickable -->
-                                <a href="{{ url_for('show_image', post_id=post.id) }}">
+                                <a href="{{ url_for('post.show_image', post_id=post.id) }}">
                                     <img src="{{ post.img_url }}" class="card-img-top" alt="...">
                                 </a>
                                 <div class="card-body">
                                     <!-- Make the title clickable -->
                                     <h5 class="card-title">
-                                        <a href="{{ url_for('show_image', post_id=post.id) }}" class="text-white">{{ post.title }}</a>
+                                        <a href="{{ url_for('post.show_image', post_id=post.id) }}" class="text-white">{{ post.title }}</a>
                                     </h5>
                                     <p class="card-text">{{ post.description }}</p>
                                     <!-- Removed the View Post button -->

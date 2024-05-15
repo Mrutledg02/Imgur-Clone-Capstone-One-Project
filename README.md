@@ -10,18 +10,6 @@ This project is an Imgur Clone, a web application inspired by Imgur, a popular o
 The Imgur Clone project is deployed and live at [https://imgur-clone-capstone-one-project.onrender.com](https://imgur-clone-capstone-one-project.onrender.com).
 
 
-## Installation
-
-To run the Imgur Clone locally, follow these steps:
-
-1. Clone the repository: `git clone <repository_url>`
-2. Navigate to the project directory
-3. Install the dependencies: `pip install -r requirements.txt`
-4. Set up the PostgreSQL database: `createdb imgur_clone_db;`
-5. Run the application: `flask run`
-6. Access the application in your web browser at `http://localhost:5000`
-
-
 ## Features
 
 - **User Authentication**: Users can sign up for an account, log in, and log out securely.

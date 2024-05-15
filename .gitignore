@@ -1,4 +1,5 @@
 
 venv/
 uploads/
+config.py
 __pycache__/

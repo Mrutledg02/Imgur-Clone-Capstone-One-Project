@@ -31,7 +31,7 @@
                         <!-- Like and Dislike buttons -->
                         <div class="d-flex">
                             <!-- Like button -->
-                            <form id="likeForm" action="{{ url_for('like_post', post_id=post.id) }}" method="post">
+                            <form id="likeForm" action="{{ url_for('like.like_post', post_id=post.id) }}" method="post">
                                 <button type="submit" class="btn btn-outline-primary">
                                     {% if not already_liked %}
                                         <i class="far fa-thumbs-up"></i>
@@ -43,7 +43,7 @@
                             </form>
 
                             <!-- Dislike button -->
-                            <form id="dislikeForm" action="{{ url_for('dislike_post', post_id=post.id) }}" method="post">
+                            <form id="dislikeForm" action="{{ url_for('dislike.dislike_post', post_id=post.id) }}" method="post">
                                 <button type="submit" class="btn btn-outline-primary">
                                     {% if not already_disliked %}
                                         <i class="far fa-thumbs-down"></i>
@@ -59,12 +59,12 @@
                             <strong><i class="fas fa-comment"></i> {{ post.comments|length }}</strong>
 
                         <!-- Display number of views -->
-                            <strong><i class="fas fa-eye"></i> {{ post.views }}</strong>
+                            <strong><i class="fas fa-eye"></i> {{ post.total_views() }}</strong>
                     </div>
                     
                     <!-- Form to add a new comment -->
                     <div class="card-body">
-                        <form id="commentForm" action="{{ url_for('add_comment_to_specific_post', post_id=post.id) }}" method="post">
+                        <form id="commentForm" action="{{ url_for('comment.add_comment_to_specific_post', post_id=post.id) }}" method="post">
                             <div class="form-group">
                                 <textarea name="text" rows="3" class="form-control" placeholder="Add your comment" maxlength="750"></textarea>
                             </div>
@@ -77,8 +77,23 @@
                         {% for comment in comments %}
                         <li class="list-group-item bg-dark text-white">
                             <div class="comment-header">
-                                <a href="{{ url_for('author_profile', username=comment.user.username) }}" class="username">{{ comment.user.username }}</a> <!-- Make username clickable -->
+                                <a href="{{ url_for('author_profile.author_profile', username=comment.user.username) }}" class="username">{{ comment.user.username }}</a> <!-- Make username clickable -->
                                 <small class="text-muted">{{ comment.created }}</small> <!-- Display comment creation date -->
+
+                                <!-- Add dropdown menu for delete option -->
+                                {% if g.user and g.user.id == comment.user.id %}
+                                    <div class="dropdown float-right">
+                                        <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton_{{ comment.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa-solid fa-ellipsis"></i>
+                                        </button>
+                                        <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton_{{ comment.id }}">
+                                            <form action="{{ url_for('comment.delete_comment', comment_id=comment.id) }}" method="post">
+                                                <button type="submit" class="dropdown-item text-white">Delete Comment</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
                             </div>
                             <div class="comment-text">
                                 {{ comment.text }} <!-- Display comment text -->
@@ -86,6 +101,7 @@
                         </li>
                         {% endfor %}
                     </ul>
+
                 </div>
             </div>
 
@@ -95,12 +111,12 @@
                 <div class="card-body">
                     <h5 class="card-text text-muted">Post Information</h5>
                     <p class="card-text">
-                        Uploaded by <strong><a href="{{ url_for('author_profile', username=post.user.username) }}">{{ post.user.username }}</a></strong>
+                        Uploaded by <strong><a href="{{ url_for('author_profile.author_profile', username=post.user.username) }}">{{ post.user.username }}</a></strong>
                         <br/>
                         Published {{ post.created }}
                     </p>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="post-url" aria-describedby="post-url" value="{{ url_for('show_image', post_id=post.id) }}" readonly>
+                        <input type="text" class="form-control" id="post-url" aria-describedby="post-url" value="{{ url_for('post.show_image', post_id=post.id) }}" readonly>
                         <small id="post-url-help" class="form-text text-muted">Click the link to copy it to your clipboard.</small>
                     </div>
 
@@ -109,13 +125,13 @@
                             <div class="float-right d-flex justify-content-between align-items-center">
                                 <div class="dropdown"></div>
                                     <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Actions
+                                        <i class="fa-solid fa-ellipsis"></i>
                                     </button>
                                     <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton">
                                         <!-- Add delete and edit button only if the current user is the author of the post -->
                                         
-                                        <a class="dropdown-item text-white" href="{{ url_for('edit_post', post_id=post.id) }}">Edit Post</a>
-                                        <form action="{{ url_for('delete_post', post_id=post.id) }}" method="post">
+                                        <a class="dropdown-item text-white" href="{{ url_for('post.edit_post', post_id=post.id) }}">Edit Post</a>
+                                        <form action="{{ url_for('post.delete_post', post_id=post.id) }}" method="post">
                                             <button type="submit" class="dropdown-item text-white delete-button">Delete Post</button>
                                         </form>    
                                     </div>

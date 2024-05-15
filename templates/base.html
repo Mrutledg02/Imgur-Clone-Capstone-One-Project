@@ -35,16 +35,16 @@
             <!-- New Post Button -->
             {% if g.user %}
             <li class="nav-item">
-                <button id="new-post-button" class="btn-sm btn-success my-2 my-sm-0" onclick="window.location.href='/postImage'">
+                <a id="new-post-button" class="btn btn-sm btn-success my-2 my-sm-0" href="{{ url_for('post.upload_image') }}">
                     <i class="fas fa-upload"></i>
                     New Post
-                </button>
+                </a>
             </li>
             {% endif %}
         </ul>
 
         <!-- Search bar -->
-        <form class="form-inline my-2 my-lg-0" action="{{ url_for('search') }}" method="GET">
+        <form class="form-inline my-2 my-lg-0" action="{{ url_for('search.search') }}" method="GET">
             <div class="input-group">
                 <input id="search-input" class="form-control" type="search" name="query" placeholder="Search for images" aria-label="Search" required>
                 <div class="input-group-append">
@@ -74,10 +74,10 @@
             <!-- User Links, only visible when session is found. -->
             {% if g.user %}
             <li class="nav-item">
-                <button id="profile-button" class="btn-sm btn-primary my-2 mr-2" type="button" onclick="window.location.href='/profile'">
+                <a id="profile-button" class="btn-sm btn-primary my-2 mr-2" type="button" href="{{ url_for('profile.profile') }}">
                     <i class="fas fa-user"></i>
                     Profile
-                </button>
+                </a>
             </li>
             <li class="nav-item">
                 <button id="logout-button" class="btn-sm btn-danger my-2" type="button" onclick="user_logout()">

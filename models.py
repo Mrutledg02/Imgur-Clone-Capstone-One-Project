@@ -70,7 +70,9 @@ class User(db.Model):
             print(f"Error incrementing total views for user {user_id}: {e}")
 
     def calculate_total_views(self):
-        total_views = sum(post.views for post in self.posts)
+        total_views = 0
+        for post in self.posts:
+            total_views += post.total_views()
         return total_views
     
     def __repr__(self):
@@ -86,7 +88,6 @@ class Post(db.Model):
     img_path = db.Column(db.String(255)) 
     thumbnail = db.Column(db.String(255))
     created = db.Column(db.DateTime, default=datetime.utcnow)
-    views = db.Column(db.Integer, default=0)
     likes_count = db.Column(db.Integer, default=0)
     dislikes_count = db.Column(db.Integer, default=0)
     fk_userid = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -94,6 +95,10 @@ class Post(db.Model):
     user = db.relationship("User", back_populates="posts")
     comments = db.relationship("Comment", back_populates="post")
     likes = db.relationship('Like', back_populates="post")
+    views = db.relationship('View', back_populates="post")
+
+    def total_views(self):
+        return len(self.views)
 
     @staticmethod
     def find_one(post_id):
@@ -128,14 +133,17 @@ class Post(db.Model):
             return []
 
     @staticmethod
-    def increment_views(post_id):
+    def increment_views(post_id, user_id):
         try:
             post = Post.query.get(post_id)
-            if post:
-                post.views += 1
-                db.session.commit()
+            if post and user_id and post.fk_userid != user_id:
+                view = View.query.filter_by(post_id=post_id, user_id=user_id).first()
+                if not view:
+                    view = View(post_id=post_id, user_id=user_id)
+                    db.session.add(view)
+                    db.session.commit()
             else:
-                print(f"Post with ID {post_id} not found.")
+                print(f"Post with ID {post_id} not found or user is the post creator.")
         except Exception as e:
             print(f"Error incrementing views for post {post_id}: {e}")
 
@@ -178,3 +186,14 @@ class Like(db.Model):
     user = db.relationship("User", back_populates="likes")
     post = db.relationship("Post", back_populates="likes")
     
+class View(db.Model):
+    __tablename__ = 'views'
+
+    id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    user = db.relationship("User")
+    post = db.relationship("Post")
+
+    __table_args__ = (db.UniqueConstraint('post_id', 'user_id', name='unique_view'),)
