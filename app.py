@@ -39,7 +39,7 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 
 bcrypt = Bcrypt(app)
 
-# Register the comment blueprint
+# Register the blueprints
 app.register_blueprint(comment_bp)
 app.register_blueprint(search_bp)
 app.register_blueprint(like_bp)
